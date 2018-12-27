@@ -1,0 +1,27 @@
+{
+    "name": "nguyenanhung/shorten-url",
+    "type": "library",
+    "description": "Shorten Url",
+    "keywords": [
+        "utils",
+        "shorten-url"
+    ],
+    "homepage": "https://github.com/nguyenanhung/shorten-url",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Nguyen An Hung",
+            "email": "dev@nguyenanhung.com",
+            "homepage": "https://nguyenanhung.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "ext-curl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "nguyenanhung\\ShortenUrl\\": "src/"
+        }
+    }
+}
