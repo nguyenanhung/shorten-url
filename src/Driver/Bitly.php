@@ -198,7 +198,7 @@ class Bitly
         } elseif ($hash) {
             $params['hash'] = $hash;
         }
-        $results = $this->call('v3/expand', $params);
+        $results = $this->call('v4/expand', $params);
 
         return $results['expand'][0];
     }
@@ -226,7 +226,7 @@ class Bitly
         if (!$shortUrl && !$hash) {
             throw new BitlyError('shortUrl or hash must be specified');
         }
-
+        $params = [];
         if ($expandUser !== NULL) {
             $params = array('expand_user' => $expandUser);
         }
@@ -236,7 +236,7 @@ class Bitly
         } elseif ($hash) {
             $params['hash'] = $hash;
         }
-        $results = $this->call('v3/info', $params);
+        $results = $this->call('v4/info', $params);
 
         return $results['info'][0];
     }
@@ -255,7 +255,7 @@ class Bitly
     public function linkLookup($url)
     {
         $params  = array('url' => $url);
-        $results = $this->call('v3/link/lookup', $params);
+        $results = $this->call('v4/link/lookup', $params);
 
         return $results['link_lookup'][0]['aggregate_link'];
     }
@@ -266,7 +266,7 @@ class Bitly
      * 'domain' is a preferred domain, but if the user has a custom short
      * domain, the custom domain will always be used.
      *
-     * @param string $longUrl
+     * @param string $url
      *  A long URL to shorten.
      * @param string $domain
      *  (Optional) A preferred domain (either 'bit.ly', 'j.mp', or 'bitly.com').
@@ -289,7 +289,7 @@ class Bitly
         if ($domain !== NULL) {
             $params['domain'] = $domain;
         }
-        $results             = $this->call('v3/shorten', $params);
+        $results             = $this->call('v4/shorten', $params);
         $results['new_hash'] = ($results['new_hash'] == 1) ? TRUE : FALSE;
 
         return $results;
@@ -315,7 +315,7 @@ class Bitly
         $keys           = array_keys($params);
         $params['edit'] = implode(',', $keys);
         $params['link'] = $link;
-        $results        = $this->call('v3/user/link_edit', $params);
+        $results        = $this->call('v4/user/link_edit', $params);
 
         return $results['link_edit'];
     }
@@ -338,7 +338,7 @@ class Bitly
     public function userLinkLookup($url)
     {
         $params  = array('url' => $url);
-        $results = $this->call('v3/user/link_lookup', $params);
+        $results = $this->call('v4/user/link_lookup', $params);
 
         return $results['link_lookup'][0];
     }
@@ -366,7 +366,7 @@ class Bitly
     public function userLinkSave($url, Array $params)
     {
         $params['longUrl']   = $url;
-        $results             = $this->call('v3/user/link_save', $params);
+        $results             = $this->call('v4/user/link_save', $params);
         $results             = $results['link_save'];
         $results['new_link'] = ($results['new_link'] == 1) ? TRUE : FALSE;
 
@@ -388,7 +388,7 @@ class Bitly
     public function highvalue($limit)
     {
         $params  = array('limit' => $limit);
-        $results = $this->call('v3/highvalue', $params);
+        $results = $this->call('v4/highvalue', $params);
 
         return $results['values'];
     }
@@ -407,6 +407,8 @@ class Bitly
      *                      (Optional) Limit to links active in this city (ordered like
      *                      'us-il-chicago').
      * @param string $domain
+     *                      (Optional) Restrict results to this domain.
+     * @param array  $fields
      *                      (Optional) Restrict results to this domain.
      *
      * @fields string[]
@@ -438,7 +440,7 @@ class Bitly
         if ($fields !== NULL) {
             $params['fields'] = implode(',', $fields);
         }
-        $results = $this->call('v3/search', $params);
+        $results = $this->call('v4/search', $params);
 
         return $results['results'];
     }
@@ -455,7 +457,7 @@ class Bitly
      */
     public function realtimeBurstingPhrases()
     {
-        return $this->call('v3/realtime/bursting_phrases');
+        return $this->call('v4/realtime/bursting_phrases');
     }
 
     /**
@@ -471,7 +473,7 @@ class Bitly
      */
     public function realtimeHotPhrases()
     {
-        return $this->call('v3/realtime/hot_phrases');
+        return $this->call('v4/realtime/hot_phrases');
     }
 
     /**
@@ -489,7 +491,7 @@ class Bitly
     {
         $params = array('phrase' => $phrase);
 
-        return $this->call('v3/realtime/clickrate', $params);
+        return $this->call('v4/realtime/clickrate', $params);
     }
 
     /**
@@ -507,7 +509,7 @@ class Bitly
     {
         $params = array('link' => $link);
 
-        return $this->call('v3/link/info', $params);
+        return $this->call('v4/link/info', $params);
     }
 
     /**
@@ -525,7 +527,7 @@ class Bitly
     {
         $params = array('link' => $link);
 
-        return $this->call('v3/link/content', $params);
+        return $this->call('v4/link/content', $params);
     }
 
     /**
@@ -542,7 +544,7 @@ class Bitly
     public function linkCategory($link)
     {
         $params  = array('link' => $link);
-        $results = $this->call('v3/link/category', $params);
+        $results = $this->call('v4/link/category', $params);
 
         return $results['categories'];
     }
@@ -565,7 +567,7 @@ class Bitly
     public function linkSocial($link)
     {
         $params  = array('link' => $link);
-        $results = $this->call('v3/link/social', $params);
+        $results = $this->call('v4/link/social', $params);
 
         return $results['social_scores'];
     }
@@ -588,7 +590,7 @@ class Bitly
     public function linkLocation($link)
     {
         $params  = array('link' => $link);
-        $results = $this->call('v3/link/location', $params);
+        $results = $this->call('v4/link/location', $params);
 
         return $results['locations'];
     }
@@ -606,7 +608,7 @@ class Bitly
     public function linkLanguage($link)
     {
         $params  = array('link' => $link);
-        $results = $this->call('v3/link/language', $params);
+        $results = $this->call('v4/link/language', $params);
 
         return $results['languages'];
     }
@@ -641,7 +643,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/link/clicks', $params);
+        return $this->call('v4/link/clicks', $params);
     }
 
     /**
@@ -671,7 +673,7 @@ class Bitly
             $params['units'] = $units;
         }
 
-        return $this->call('v3/link/countries', $params);
+        return $this->call('v4/link/countries', $params);
     }
 
     /**
@@ -700,7 +702,7 @@ class Bitly
             $params['expand_user'] = $expandUser;
         }
 
-        return $this->call('v3/link/encoders', $params);
+        return $this->call('v4/link/encoders', $params);
     }
 
     /**
@@ -716,7 +718,7 @@ class Bitly
     {
         $params = array('link' => $link);
 
-        return $this->call('v3/link/encoders_count', $params);
+        return $this->call('v4/link/encoders_count', $params);
     }
 
     /**
@@ -745,7 +747,7 @@ class Bitly
             $params['units'] = $units;
         }
 
-        return $this->call('v3/link/referrers', $params);
+        return $this->call('v4/link/referrers', $params);
     }
 
     /**
@@ -775,7 +777,7 @@ class Bitly
             $params['units'] = $units;
         }
 
-        return $this->call('v3/link/refererrs_by_domain', $params);
+        return $this->call('v4/link/refererrs_by_domain', $params);
     }
 
     /**
@@ -805,7 +807,7 @@ class Bitly
             $params['units'] = $units;
         }
 
-        return $this->call('v3/link/refererring_domains', $params);
+        return $this->call('v4/link/refererring_domains', $params);
     }
 
     /**
@@ -838,7 +840,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/link/shares', $params);
+        return $this->call('v4/link/shares', $params);
     }
 
     /**
@@ -867,7 +869,7 @@ class Bitly
             $params['full_name'] = $fullName;
         }
 
-        return $this->call('v3/user/info', $params);
+        return $this->call('v4/user/info', $params);
     }
 
     /**
@@ -924,7 +926,7 @@ class Bitly
             $params['user'] = $user;
         }
 
-        return $this->call('v3/user/link_history', $params);
+        return $this->call('v4/user/link_history', $params);
     }
 
     /**
@@ -953,7 +955,7 @@ class Bitly
             $params['expand_user'] = $expandUser;
         }
 
-        return $this->call('v3/user/network_history', $params);
+        return $this->call('v4/user/network_history', $params);
     }
 
     /**
@@ -965,7 +967,7 @@ class Bitly
      */
     public function userTrackingDomainList()
     {
-        $result = $this->call('v3/user/tracking_domain_list');
+        $result = $this->call('v4/user/tracking_domain_list');
 
         return $result['tracking_domains'];
     }
@@ -1000,7 +1002,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/user/clicks', $params);
+        return $this->call('v4/user/clicks', $params);
     }
 
     /**
@@ -1033,7 +1035,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/user/countries', $params);
+        return $this->call('v4/user/countries', $params);
     }
 
     /**
@@ -1061,7 +1063,7 @@ class Bitly
             $params['units'] = $units;
         }
 
-        return $this->call('v3/user/popular_links', $params);
+        return $this->call('v4/user/popular_links', $params);
     }
 
     /**
@@ -1094,7 +1096,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/user/referrers', $params);
+        return $this->call('v4/user/referrers', $params);
     }
 
     /**
@@ -1128,7 +1130,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/user/referring_domains', $params);
+        return $this->call('v4/user/referring_domains', $params);
     }
 
     /**
@@ -1161,7 +1163,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/user/share_counts', $params);
+        return $this->call('v4/user/share_counts', $params);
     }
 
     /**
@@ -1193,7 +1195,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/user/share_counts_by_share_type', $params);
+        return $this->call('v4/user/share_counts_by_share_type', $params);
     }
 
     /**
@@ -1227,7 +1229,7 @@ class Bitly
             $params['rollup'] = $rollup;
         }
 
-        return $this->call('v3/user/shorten_counts', $params);
+        return $this->call('v4/user/shorten_counts', $params);
     }
 
     /**
@@ -1244,7 +1246,7 @@ class Bitly
     public function bundleArchive($bundleLink)
     {
         $params = array('bundle_link' => $bundleLink);
-        $result = $this->call('v3/bundle/archive', $params, FALSE, TRUE);
+        $result = $this->call('v4/bundle/archive', $params, FALSE, TRUE);
 
         return ($result === 'OK') ? TRUE : FALSE;
     }
@@ -1265,7 +1267,7 @@ class Bitly
         if ($expandUser !== NULL) {
             $params['expand_user'] = $expandUser;
         }
-        $result = $this->call('v3/bundle/bundles_by_user', $params);
+        $result = $this->call('v4/bundle/bundles_by_user', $params);
 
         return $result['bundles'];
     }
@@ -1282,7 +1284,7 @@ class Bitly
     public function bundleClone($bundleLink)
     {
         $params = array('bundle_link' => $bundleLink);
-        $result = $this->call('v3/bundle/clone', $params);
+        $result = $this->call('v4/bundle/clone', $params);
 
         return $result['bundle'];
     }
@@ -1301,7 +1303,7 @@ class Bitly
     {
         $params = array('bundle_link'  => $bundleLink,
                         'collaborator' => $collaborator);
-        $result = $this->call('v3/bundle/collaborator_add', $params);
+        $result = $this->call('v4/bundle/collaborator_add', $params);
 
         return $result['bundle'];
     }
@@ -1320,7 +1322,7 @@ class Bitly
     {
         $params = array('bundle_link'  => $bundleLink,
                         'collaborator' => $collaborator);
-        $result = $this->call('v3/bundle/collaborator_remove', $params);
+        $result = $this->call('v4/bundle/collaborator_remove', $params);
 
         return $result['bundle'];
     }
@@ -1337,7 +1339,7 @@ class Bitly
     public function bundleContents($bundleLink)
     {
         $params = array('bundle_link' => $bundleLink);
-        $result = $this->call('v3/bundle/contents', $params);
+        $result = $this->call('v4/bundle/contents', $params);
 
         return $result['bundle'];
     }
@@ -1365,7 +1367,7 @@ class Bitly
         if ($description !== NULL) {
             $params['description'] = $description;
         }
-        $result = $this->call('v3/bundle/create', $params);
+        $result = $this->call('v4/bundle/create', $params);
 
         return $result['bundle'];
     }
@@ -1415,7 +1417,7 @@ class Bitly
             $keys[]             = 'og_image';
         }
         $params['edit'] = implode(',', $keys);
-        $result         = $this->call('v3/bundle/edit', $params);
+        $result         = $this->call('v4/bundle/edit', $params);
 
         return $result['bundle'];
     }
@@ -1439,7 +1441,7 @@ class Bitly
         if ($title !== NULL) {
             $params['title'] = $title;
         }
-        $result = $this->call('v3/bundle/link_add', $params);
+        $result = $this->call('v4/bundle/link_add', $params);
 
         return $result['bundle'];
     }
@@ -1459,7 +1461,7 @@ class Bitly
     {
         $params = array('bundle_link' => $bundleLink, 'link' => $link,
                         'comment'     => $comment);
-        $result = $this->call('v3/bundle/link_comment_add', $params);
+        $result = $this->call('v4/bundle/link_comment_add', $params);
 
         return $result['bundle'];
     }
@@ -1482,7 +1484,7 @@ class Bitly
     ) {
         $params = array('bundle_link' => $bundleLink, 'link' => $link,
                         'comment_id'  => $commentId, 'comment' => $comment);
-        $result = $this->call('v3/bundle/link_comment_edit', $params);
+        $result = $this->call('v4/bundle/link_comment_edit', $params);
 
         return $result['bundle'];
     }
@@ -1504,7 +1506,7 @@ class Bitly
     {
         $params = array('bundle_link' => $bundleLink, 'link' => $link,
                         'comment_id'  => $commentId);
-        $result = $this->call('v3/bundle/link_comment_remove', $params);
+        $result = $this->call('v4/bundle/link_comment_remove', $params);
 
         return $result['bundle'];
     }
@@ -1537,7 +1539,7 @@ class Bitly
             $params['preview'] = $preview;
             $keys[]            = 'preview';
         }
-        $result = $this->call('v3/bundle/link_edit', $params);
+        $result = $this->call('v4/bundle/link_edit', $params);
 
         return $result['bundle'];
     }
@@ -1555,7 +1557,7 @@ class Bitly
     public function bundleLinkRemove($bundleLink, $link)
     {
         $params = array('bundle_link' => $bundleLink, 'link' => $link);
-        $result = $this->call('v3/bundle/link_remove', $params);
+        $result = $this->call('v4/bundle/link_remove', $params);
 
         return $result['bundle'];
     }
@@ -1578,7 +1580,7 @@ class Bitly
     {
         $params = array('bundle_link'   => $bundleLink, 'link' => $link,
                         'display_order' => $displayOrder);
-        $result = $this->call('v3/bundle/link_reorder', $params);
+        $result = $this->call('v4/bundle/link_reorder', $params);
 
         return $result['bundle'];
     }
@@ -1602,7 +1604,7 @@ class Bitly
     ) {
         $params = array('bundle_link'  => $bundleLink,
                         'collaborator' => $collaborator);
-        $result = $this->call('v3/bundle/pending_collaborator_remove',
+        $result = $this->call('v4/bundle/pending_collaborator_remove',
                               $params);
 
         return $result['bundle'];
@@ -1620,7 +1622,7 @@ class Bitly
     public function bundleViewCount($bundleLink)
     {
         $params = array('bundle_link' => $bundleLink);
-        $result = $this->call('v3/bundle/view_count', $params);
+        $result = $this->call('v4/bundle/view_count', $params);
 
         return $result['view_count'];
     }
@@ -1640,7 +1642,7 @@ class Bitly
         if ($expandUser !== NULL) {
             $params['expand_user'] = $expandUser;
         }
-        $result = $this->call('v3/user/bundle_history', $params);
+        $result = $this->call('v4/user/bundle_history', $params);
 
         return $result['bundles'];
     }
@@ -1657,7 +1659,7 @@ class Bitly
     public function bitlyProDomain($domain)
     {
         $params = array('domain' => $domain);
-        $result = $this->call('v3/bitly_pro_domain', $params);
+        $result = $this->call('v4/bitly_pro_domain', $params);
 
         return ($result['bitly_pro_domain'] == 1) ? TRUE : FALSE;
     }
@@ -1693,7 +1695,7 @@ class Bitly
         if ($rollup !== NULL) {
             $params['rollup'] = $rollup;
         }
-        $result = $this->call('v3/user/tracking_domain_clicks', $params);
+        $result = $this->call('v4/user/tracking_domain_clicks', $params);
 
         return $result['tracking_domain_clicks'];
     }
@@ -1727,7 +1729,7 @@ class Bitly
         if ($rollup !== NULL) {
             $params['rollup'] = $rollup;
         }
-        $result = $this->call('v3/user/tracking_domain_shorten_counts',
+        $result = $this->call('v4/user/tracking_domain_shorten_counts',
                               $params);
 
         return $result['tracking_domain_shorten_counts'];
