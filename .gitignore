@@ -120,3 +120,4 @@ GitHub.sublime-settings
 ## Composer
 /vendor/
 composer.lock
+test.php
