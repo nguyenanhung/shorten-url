@@ -10,7 +10,7 @@
 namespace nguyenanhung\ShortenUrl;
 
 /**
- * Class TinyURL
+ * Class SpooMeUrl
  *
  * @package   nguyenanhung\ShortenUrl
  * @author    713uk13m <dev@nguyenanhung.com>
@@ -65,7 +65,7 @@ class SpooMeUrl implements ShortenUrlInterface
         $err = curl_error($curl);
         curl_close($curl);
         if (!$err) {
-            $res = json_decode($response);
+            $res = json_decode($response, false);
             if (!empty($res->short_url)) {
                 return $res->short_url;
             }

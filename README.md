@@ -1,6 +1,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/nguyenanhung/shorten-url.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/shorten-url)
 [![Total Downloads](https://img.shields.io/packagist/dt/nguyenanhung/shorten-url.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/shorten-url)
 [![License](https://img.shields.io/packagist/l/nguyenanhung/shorten-url.svg?style=flat-square)](https://packagist.org/packages/nguyenanhung/shorten-url)
+[![PHP Version Require](https://img.shields.io/packagist/dependency-v/nguyenanhung/shorten-url/php)](https://packagist.org/packages/nguyenanhung/shorten-url)
 
 # Shorten URL
 
